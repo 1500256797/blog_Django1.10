@@ -4,14 +4,14 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from blog import views
+from blog.views import HomeView
 
 admin.autodiscover()
 
 urlpatterns =[
     # blog
-    # url(r'^(?P<page>\d*)/$',views.home,name='home'),
     url(r'^blog/',include('blog.urls')),
-    url(r'^$', views.home, name='home'),
+    url(r'^$', HomeView.as_view(), name='home'),
     # admin
     url(r'^admin/', admin.site.urls,name='admin'),
     url(r'^filer/',include('filer.urls')),

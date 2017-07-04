@@ -2,15 +2,25 @@ from collections import defaultdict
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
+from django.views import View
+from django.views.generic import TemplateView, ListView, DetailView
 
 from blog.models import BlogPost, Category
 
+'''
+返回的是一个HttpResonse对象
+'''
+class HomeView(ListView):
+    model = BlogPost
+    template_name = 'blog/index.html'
+    context_object_name = 'blogposts'
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context['categorys'] = Category.objects.filter(name__isnull=False)
+        return context
 
 
-def home(request):
-    categorys = Category.objects.filter(name__isnull=False)
-    blogposts = BlogPost.objects.all()
-    return render(request, 'blog/index.html', locals())
+
 
 def blogpost(request, slug, post_id):
     args = {'blogpost': get_object_or_404(BlogPost, pk=post_id)}
